@@ -44,6 +44,7 @@ export default function SystemPage() {
     if (!Array.isArray(files)) return <div className="p-8 text-destructive">Configuration error: systemDesign should be a list of files.</div>;
 
     const [toc, setToc] = useState<{ id: string; text: string; level: number }[]>([]);
+    const [activeId, setActiveId] = useState<string>("");
 
     useEffect(() => {
         if (!content) {
@@ -77,6 +78,29 @@ export default function SystemPage() {
         setToc(headings);
     }, [content]);
 
+    // Scroll Spy for Table of Contents
+    useEffect(() => {
+        if (!toc.length) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActiveId(entry.target.id);
+                    }
+                });
+            },
+            { rootMargin: "0px 0px -80% 0px" }
+        );
+
+        toc.forEach((item) => {
+            const element = document.getElementById(item.id);
+            if (element) observer.observe(element);
+        });
+
+        return () => observer.disconnect();
+    }, [toc]);
+
     return (
         <div className="flex h-full bg-background">
             {/* Left Sidebar */}
@@ -90,10 +114,10 @@ export default function SystemPage() {
                             key={file.path}
                             onClick={() => setSelectedPath(file.path)}
                             className={clsx(
-                                "w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200",
+                                "w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-300 border",
                                 selectedPath === file.path
-                                    ? "bg-primary/10 text-primary font-medium shadow-sm border border-primary/20"
-                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    ? "bg-gradient-to-r from-violet-500/10 to-blue-500/10 text-violet-600 dark:text-violet-400 font-medium border-violet-200/50 dark:border-violet-800/50 shadow-sm"
+                                    : "border-transparent text-muted-foreground hover:bg-violet-500/5 dark:hover:bg-violet-500/10 hover:text-violet-600 dark:hover:text-violet-300"
                             )}
                         >
                             {file.title}
@@ -133,16 +157,19 @@ export default function SystemPage() {
                                     key={item.id}
                                     href={`#${item.id}`}
                                     className={clsx(
-                                        "block text-sm py-0.5 transition-colors duration-200 border-l -ml-[17px] pl-4",
-                                        item.level === 1
-                                            ? "font-medium text-foreground hover:text-primary border-transparent hover:border-border"
-                                            : "text-muted-foreground hover:text-foreground border-transparent hover:border-border"
+                                        "block text-sm py-0.5 transition-all duration-200 border-l -ml-[17px] pl-4",
+                                        activeId === item.id
+                                            ? "border-violet-500 font-medium text-violet-600 dark:text-violet-400"
+                                            : item.level === 1
+                                                ? "border-transparent text-foreground hover:text-primary hover:border-border"
+                                                : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
                                     )}
                                     // Indent logic could be simpler visually by just nesting or standard indent
                                     style={{ paddingLeft: item.level > 1 ? `${(item.level - 1) * 1}rem` : undefined }}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
+                                        setActiveId(item.id);
                                     }}
                                 >
                                     {item.text}
