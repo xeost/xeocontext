@@ -11,7 +11,7 @@ interface AsyncApiRendererProps {
 
 export function AsyncApiRenderer({ schema }: AsyncApiRendererProps) {
     return (
-        <div className="asyncapi-container bg-white rounded-lg p-4 overflow-x-auto">
+        <div className="asyncapi-container bg-white dark:bg-neutral-950 dark:text-neutral-100 rounded-lg p-4 overflow-x-auto">
             <AsyncApiComponent schema={schema} />
         </div>
     );

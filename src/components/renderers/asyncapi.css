@@ -1,10 +1,30 @@
-/* Main container inversion with boosted contrast */
+/* Force container to be dark and text light */
 .dark .asyncapi-container {
-    background-color: white !important;
-    filter: invert(1) hue-rotate(180deg) contrast(1.5) brightness(1.3);
+    background-color: #09090b !important;
+    /* zinc-950 */
+    color: #e4e4e7 !important;
+    /* zinc-200 */
 }
 
-.dark .asyncapi-container img,
-.dark .asyncapi-container pre {
+/* 
+   Crucial: The AsyncAPI component renders internal divs with white backgrounds 
+   (likely .bg-white). We must override this to let the dark container show through.
+*/
+.dark .asyncapi-container div {
+    background-color: transparent !important;
+}
+
+/* Revert text color on syntax highlighting or specific badges if needed, 
+   but 'transparent' background is key. 
+   We also insure text is inherited so it becomes light.
+*/
+.dark .asyncapi-container h1,
+.dark .asyncapi-container h2,
+.dark .asyncapi-container p,
+.dark .asyncapi-container span {
+    color: inherit;
+}
+
+.dark .asyncapi-container img {
     filter: invert(1) hue-rotate(180deg);
 }
