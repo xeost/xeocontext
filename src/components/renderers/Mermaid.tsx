@@ -87,7 +87,7 @@ export function Mermaid({ chart }: { chart: string }) {
                             maxScale={20}
                             centerOnInit
                         >
-                            {({ zoomIn, zoomOut, resetTransform }) => (
+                            {({ zoomIn, zoomOut, resetTransform, centerView }) => (
                                 <>
                                     {/* Controls overlay */}
                                     <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 flex items-center space-x-2 bg-background/60 backdrop-blur-md p-1.5 rounded-full border border-border/50 shadow-lg">
@@ -108,7 +108,7 @@ export function Mermaid({ chart }: { chart: string }) {
                                         </button>
                                         <div className="w-px h-4 bg-border/50" />
                                         <button
-                                            onClick={() => resetTransform()}
+                                            onClick={() => centerView(3)}
                                             className="p-2 hover:bg-accent text-muted-foreground hover:text-foreground rounded-full transition-colors"
                                             title="Reset"
                                         >
