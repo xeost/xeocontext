@@ -3,16 +3,28 @@
     "files": {
         "systemDesign": [
             {
-                "title": "Overview",
-                "path": "system-design/overview.md"
+                "title": "Architecture Overview",
+                "path": "system-design/01-architecture-overview.md"
             },
             {
                 "title": "Database Schema",
-                "path": "system-design/database.md"
+                "path": "system-design/02-database-design.md"
             },
             {
-                "title": "API Guidelines",
-                "path": "system-design/api-guidelines.md"
+                "title": "API & Workflows",
+                "path": "system-design/03-api-workflows.md"
+            },
+            {
+                "title": "Infrastructure & Security",
+                "path": "system-design/04-infrastructure-security.md"
+            },
+            {
+                "title": "Sync Engine (Local-First)",
+                "path": "system-design/05-synchronization-engine.md"
+            },
+            {
+                "title": "K8s Deployment",
+                "path": "system-design/06-deployment-k8s.md"
             }
         ],
         "openapi": "openapi.yaml",
