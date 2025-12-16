@@ -11,6 +11,8 @@ import "highlight.js/styles/github-dark.css";
 
 import { Mermaid } from "./Mermaid";
 
+import clsx from "clsx";
+
 interface MarkdownRendererProps {
     content: string;
 }
@@ -25,9 +27,9 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             prose-ul:text-muted-foreground prose-ol:text-muted-foreground
             prose-a:text-primary prose-a:font-medium prose-a:no-underline prose-a:border-b prose-a:border-primary/30 hover:prose-a:border-primary prose-a:transition-colors
             prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none prose-code:font-mono prose-code:text-sm
-            prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:shadow-sm
             prose-img:rounded-xl prose-img:shadow-md prose-img:border prose-img:border-border
             prose-blockquote:border-l-primary prose-blockquote:bg-muted/20 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-blockquote:text-muted-foreground prose-blockquote:not-italic
+            [&_pre:has(.mermaid)]:!bg-transparent [&_pre:has(.mermaid)]:!border-none [&_pre:has(.mermaid)]:!shadow-none [&_pre:has(.mermaid)]:!p-0
             ">
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -39,6 +41,20 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
 
                         if (!inline && language === "mermaid") {
                             return <Mermaid chart={String(children).replace(/\n$/, "")} />;
+                        }
+
+                        if (!inline) {
+                            return (
+                                <code
+                                    className={clsx(
+                                        className,
+                                        "block bg-[#0d1117] border border-border rounded-xl shadow-sm p-4 overflow-x-auto font-mono text-sm !text-gray-100"
+                                    )}
+                                    {...props}
+                                >
+                                    {children}
+                                </code>
+                            );
                         }
 
                         return (

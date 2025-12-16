@@ -65,12 +65,12 @@ export function Mermaid({ chart }: { chart: string }) {
             <div className="relative group my-8">
                 <div
                     ref={ref}
-                    className="mermaid flex justify-center p-6 bg-card/50 backdrop-blur-sm rounded-xl overflow-x-auto border border-border/50 shadow-sm transition-all hover:border-primary/20 hover:shadow-md"
+                    className="mermaid flex justify-center p-6 rounded-xl overflow-x-auto"
                     dangerouslySetInnerHTML={{ __html: svg }}
                 />
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="absolute top-3 right-3 p-2 bg-background/80 backdrop-blur-md border border-border rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-accent hover:text-accent-foreground shadow-sm"
+                    className="absolute top-3 right-3 p-2 bg-muted/80 hover:bg-muted backdrop-blur-md border border-border rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 text-muted-foreground hover:text-foreground shadow-sm"
                     title="Expand"
                 >
                     <Maximize2 className="w-4 h-4" />
@@ -82,9 +82,9 @@ export function Mermaid({ chart }: { chart: string }) {
                     <div className="w-full h-full rounded-2xl flex flex-col overflow-hidden relative border border-border bg-card/30 shadow-2xl">
 
                         <TransformWrapper
-                            initialScale={1}
+                            initialScale={3}
                             minScale={0.5}
-                            maxScale={4}
+                            maxScale={20}
                             centerOnInit
                         >
                             {({ zoomIn, zoomOut, resetTransform }) => (
@@ -131,7 +131,7 @@ export function Mermaid({ chart }: { chart: string }) {
                                             contentClass="!w-full !h-full flex items-center justify-center"
                                         >
                                             <div
-                                                className="min-w-min min-h-min p-20"
+                                                className="min-w-min min-h-min p-10"
                                                 dangerouslySetInnerHTML={{ __html: svg }}
                                             />
                                         </TransformComponent>

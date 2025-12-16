@@ -14,19 +14,19 @@ The system is composed of two primary subsystems:
 
 ```mermaid
 graph TD
-    User[Clients (Web/Mobile)]
-    LB[Load Balancer / Ingress]
-    Auth[Auth Service (JWT)]
+    User["Clients (Web/Mobile)"]
+    LB["Load Balancer / Ingress"]
+    Auth["Auth Service (JWT)"]
     
     subgraph "Kubernetes Cluster"
-        API[Core API Service]
-        Sync[Sync Service / WebSocket]
-        Worker[Async Worker]
+        API["Core API Service"]
+        Sync["Sync Service / WebSocket"]
+        Worker["Async Worker"]
     end
     
-    DB[(PostgreSQL\nPrimary + Read Replicas)]
-    Redis[(Redis Cluster\nPub/Sub + Cache)]
-    ObjStore[Object Storage (S3)]
+    DB[("PostgreSQL\nPrimary + Read Replicas")]
+    Redis[("Redis Cluster\nPub/Sub + Cache")]
+    ObjStore["Object Storage (S3)"]
 
     User -->|HTTPS /v1| LB
     User -->|WSS /v1/sync| LB
