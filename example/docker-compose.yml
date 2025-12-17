@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  viewer:
+    image: xeost/xeocontext-viewer:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app/content
+    environment:
+      - CONFIG_PATH=/app/content/xeocontext.config.json

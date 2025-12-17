@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  email:
+    type: string
+    format: email
+  fullName:
+    type: string
+  createdAt:
+    type: string
+    format: date-time
+required:
+  - id
+  - email

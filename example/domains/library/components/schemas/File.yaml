@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  filename:
+    type: string
+  mimeType:
+    type: string
+  size:
+    type: integer
+  url:
+    type: string
+    format: uri
+required:
+  - id
+  - filename

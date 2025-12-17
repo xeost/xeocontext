@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  isCompleted:
+    type: boolean
+  createdAt:
+    type: string
+    format: date-time
+required:
+  - id
+  - title
+  - isCompleted

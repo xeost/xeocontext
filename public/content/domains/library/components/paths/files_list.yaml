@@ -1,0 +1,15 @@
+get:
+  summary: List library files
+  tags: [Library]
+  responses:
+    '200':
+      description: List of files
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../schemas/File.yaml'

@@ -1,0 +1,55 @@
+get:
+  summary: List notes
+  tags: [Notes]
+  parameters:
+    - name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+  responses:
+    '200':
+      description: List of notes
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../schemas/Note.yaml'
+              meta:
+                type: object
+                properties:
+                  total:
+                    type: integer
+post:
+  summary: Create note
+  tags: [Notes]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+            content:
+              type: string
+  responses:
+    '201':
+      description: Note created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '../schemas/Note.yaml'

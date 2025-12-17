@@ -1,0 +1,22 @@
+payload:
+  type: object
+  properties:
+    event:
+      type: string
+      enum: [synced]
+    timestamp:
+      type: string
+      format: date-time
+    userId:
+      type: string
+    changes:
+      type: array
+      items:
+        type: object
+        properties:
+          fileId:
+            type: string
+          state:
+             type: object
+             additionalProperties: true
+             # detailed schema omitted for brevity, similar to REST SyncPayload

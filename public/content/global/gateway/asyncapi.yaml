@@ -1,0 +1,11 @@
+asyncapi: 3.0.0
+info:
+  title: ExampleApp Unified Events
+  version: 1.0.0
+  description: Master Event definition
+channels:
+  library/sync:
+    address: library/sync
+    messages:
+      stateUpdate:
+        $ref: '../../domains/library/components/messages/StateUpdate.yaml'

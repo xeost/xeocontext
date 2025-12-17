@@ -1,0 +1,45 @@
+parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+get:
+  summary: Get note
+  tags: [Notes]
+  responses:
+    '200':
+      description: Note found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '../schemas/Note.yaml'
+put:
+  summary: Update note
+  tags: [Notes]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/Note.yaml'
+  responses:
+    '200':
+      description: Note updated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '../schemas/Note.yaml'
+delete:
+  summary: Delete note
+  tags: [Notes]
+  responses:
+    '204':
+      description: Note deleted

@@ -1,0 +1,29 @@
+type: object
+properties:
+  timestamp:
+    type: string
+    format: date-time
+  updates:
+    type: array
+    items:
+      type: object
+      properties:
+        fileId:
+          type: string
+        viewerType:
+          type: string
+          enum: [pdf, epub, image]
+        state:
+          type: object
+          properties:
+            lastReadPage:
+              type: integer
+            bookmarks:
+              type: array
+              items:
+                type: integer
+            isFavorite:
+              type: boolean
+          description: Dynamic state based on viewerType. PDF/EPUB use lastReadPage/bookmarks. Image uses isFavorite.
+required:
+  - updates

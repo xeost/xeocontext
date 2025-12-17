@@ -1,0 +1,60 @@
+get:
+  summary: List todos
+  tags: [Todos]
+  parameters:
+    - name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+    - name: isCompleted
+      in: query
+      schema:
+        type: boolean
+  responses:
+    '200':
+      description: List of todos
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../schemas/Todo.yaml'
+              meta:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+post:
+  summary: Create todo
+  tags: [Todos]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+          required: [title]
+  responses:
+    '201':
+      description: Todo created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '../schemas/Todo.yaml'
