@@ -8,7 +8,7 @@ mermaid.initialize({
     startOnLoad: false,
 });
 
-export function Mermaid({ chart }: { chart: string }) {
+export const Mermaid = React.memo(function Mermaid({ chart }: { chart: string }) {
     const ref = useRef<HTMLDivElement>(null);
     const { theme } = useTheme();
     const [svg, setSvg] = useState("");
@@ -144,4 +144,4 @@ export function Mermaid({ chart }: { chart: string }) {
             )}
         </>
     );
-}
+});
