@@ -1,0 +1,250 @@
+asyncapi: '2.6.0'
+info:
+  title: XeoContext Library Sync (Local-First)
+  version: '1.0.0'
+  description: |
+    **Real-time Synchronization API** for the XeoContext Digital Library.
+    
+    This API is designed to support a **Local-First** architecture with Optimistic UI patterns. 
+    It ensures that user actions (adding files, reading books, marking favorites) are instantly reflected locally and synchronized continuously across devices.
+
+    ### Key Capabilities
+    - **Library Management**: Sync file additions, deletions, and metadata updates.
+    - **Universal Progress Sync**: Tracks "Last Page Read" for both PDF and EPUB viewers.
+    - **Smart Bookmarks**: Syncs annotated bookmarks across devices.
+    - **Asset Favorites**: Instant sync for "Favorite" status on images and documents.
+
+servers:
+  production:
+    url: wss://sync.xeocontext.com/v1/sync
+    protocol: wss
+    description: Primary sync cluster (Edge optimized)
+  dev:
+    url: ws://localhost:8080/v1/sync
+    protocol: ws
+    description: Local development server
+
+channels:
+  library/global/events:
+    description: |
+      Global channel for library structure events. 
+      Clients listen here to keep their local file index in sync with the cloud.
+    subscribe:
+      operationId: subscribeLibraryEvents
+      summary: Receive library updates (remote changes)
+      message:
+        oneOf:
+          - $ref: '#/components/messages/FileAdded'
+          - $ref: '#/components/messages/FileRemoved'
+          - $ref: '#/components/messages/FileUpdated'
+    publish:
+      operationId: publishLibraryAction
+      summary: Broadcast local library mutation
+      message:
+        oneOf:
+          - $ref: '#/components/messages/FileAdded'
+          - $ref: '#/components/messages/FileRemoved'
+          - $ref: '#/components/messages/FileUpdated'
+
+  viewers/reading/progress:
+    description: |
+      High-frequency channel for syncing reading positions.
+      Supports both PDF (page numbers) and EPUB (CFI locators).
+      Optimized for "last read" conflict resolution using LWW (Last-Write-Wins).
+    publish:
+      operationId: updateReadingProgress
+      summary: Update last read page/position
+      message:
+        $ref: '#/components/messages/ReadingProgress'
+    subscribe:
+      operationId: onReadingProgress
+      summary: Receive remote reading progress updates
+      message:
+        $ref: '#/components/messages/ReadingProgress'
+
+  viewers/reading/bookmarks:
+    description: |
+      Channel for managing user bookmarks within documents.
+    publish:
+      operationId: emitBookmarkChange
+      summary: Add or remove a bookmark
+      message:
+        $ref: '#/components/messages/BookmarkEvent'
+    subscribe:
+      operationId: onBookmarkChange
+      summary: Sync remote bookmark changes
+      message:
+        $ref: '#/components/messages/BookmarkEvent'
+
+  viewers/gallery/favorites:
+    description: |
+      Dedicated channel for image gallery interactions, specifically "Heart/Favorite" toggles.
+    publish:
+      operationId: toggleFavorite
+      message:
+        $ref: '#/components/messages/FavoriteEvent'
+    subscribe:
+      operationId: onFavoriteToggled
+      message:
+        $ref: '#/components/messages/FavoriteEvent'
+
+components:
+  messages:
+    # --- Library Messages ---
+    FileAdded:
+      name: FileAdded
+      title: File Added
+      summary: A new file has been added to the library
+      payload:
+        type: object
+        required: [type, payload, timestamp]
+        properties:
+          type:
+            type: string
+            const: FILE_ADDED
+          payload:
+            $ref: '#/components/schemas/File'
+          timestamp:
+            type: string
+            format: date-time
+
+    FileRemoved:
+      name: FileRemoved
+      title: File Removed
+      summary: A file was permanently removed
+      payload:
+        type: object
+        required: [type, fileId, timestamp]
+        properties:
+          type:
+             type: string
+             const: FILE_REMOVED
+          fileId:
+             type: string
+             format: uuid
+          timestamp:
+             type: string
+             format: date-time
+
+    FileUpdated:
+      name: FileUpdated
+      title: File Metadata Updated
+      summary: File details (name, tags) were updated
+      payload:
+        type: object
+        required: [type, fileId, changes, timestamp]
+        properties:
+          type:
+            type: string
+            const: FILE_UPDATED
+          fileId:
+            type: string
+            format: uuid
+          changes:
+            type: object
+            description: Partial object containing changed fields
+          timestamp:
+            type: string
+            format: date-time
+
+    # --- Reading Messages ---
+    ReadingProgress:
+      name: ReadingProgress
+      title: Reading Progress Update
+      summary: User moved to a new page or location
+      payload:
+        type: object
+        required: [fileId, docType, location, timestamp, deviceId]
+        properties:
+          fileId:
+            type: string
+            format: uuid
+          docType:
+            type: string
+            enum: [pdf, epub]
+            description: Determines how to interpret 'location'
+          location:
+             type: object
+             properties:
+               page:
+                 type: integer
+                 description: For PDF (1-based index)
+               cfi:
+                 type: string
+                 description: For EPUB (EpubCFI string)
+               percentage:
+                 type: number
+                 description: Approximate 0-100 float
+          timestamp:
+             type: string
+             format: date-time
+          deviceId:
+             type: string
+             description: Originating device ID for conflict resolution
+
+    BookmarkEvent:
+      name: BookmarkEvent
+      title: Bookmark Change
+      payload:
+        type: object
+        required: [action, fileId, bookmark]
+        properties:
+           action:
+             type: string
+             enum: [created, deleted]
+           fileId:
+             type: string
+             format: uuid
+           bookmark:
+             type: object
+             properties:
+               id:
+                 type: string
+                 format: uuid
+               location: 
+                 type: string
+                 description: Page number or CFI
+               label:
+                 type: string
+               color:
+                 type: string
+           timestamp:
+              type: string
+              format: date-time
+
+    # --- Gallery Messages ---
+    FavoriteEvent:
+      name: FavoriteEvent
+      title: Favorite Toggled
+      payload:
+        type: object
+        required: [fileId, isFavorite, timestamp]
+        properties:
+          fileId:
+            type: string
+            format: uuid
+          isFavorite:
+            type: boolean
+          timestamp:
+            type: string
+            format: date-time
+
+  schemas:
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        sizeBytes:
+          type: integer
+        mimeType:
+          type: string
+        url:
+          type: string
+          format: uri
+        uploadedAt:
+          type: string
+          format: date-time
