@@ -30,7 +30,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
     return (
         <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-            <Header title={config.title} />
+            <Header title={config.projectName || "Xeocontext"} />
             <main className="flex-1 flex flex-col overflow-hidden relative">
                 {children}
             </main>
