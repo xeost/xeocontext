@@ -26,7 +26,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             prose-strong:text-foreground prose-strong:font-semibold
             prose-ul:text-muted-foreground prose-ol:text-muted-foreground
             prose-a:text-primary prose-a:font-medium prose-a:no-underline prose-a:border-b prose-a:border-primary/30 hover:prose-a:border-primary prose-a:transition-colors
-            prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none prose-code:font-mono prose-code:text-sm
+            prose-code:before:content-none prose-code:after:content-none
             prose-img:rounded-xl prose-img:shadow-md prose-img:border prose-img:border-border
             prose-blockquote:border-l-primary prose-blockquote:bg-muted/20 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-blockquote:text-muted-foreground prose-blockquote:not-italic
             [&_pre:has(.mermaid)]:!bg-transparent [&_pre:has(.mermaid)]:!border-none [&_pre:has(.mermaid)]:!shadow-none [&_pre:has(.mermaid)]:!p-0
@@ -38,12 +38,19 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                     code({ node, inline, className, children, ...props }: any) {
                         const match = /language-(\w+)/.exec(className || "");
                         const language = match ? match[1] : "";
+                        const codeString = String(children).replace(/\n$/, "");
+                        const isMultiLine = codeString.includes("\n");
 
                         if (!inline && language === "mermaid") {
-                            return <Mermaid chart={String(children).replace(/\n$/, "")} />;
+                            return <Mermaid chart={codeString} />;
                         }
 
-                        if (!inline) {
+                        // Determine if it should really be rendered as a block
+                        // We treat it as a block only if it's explicitly not inline AND (has multiple lines OR has a language defined)
+                        // This handles the edge case where headers containing inline code are sometimes flagged as not inline but should appear inline.
+                        const isBlock = !inline && (isMultiLine || !!language);
+
+                        if (isBlock) {
                             return (
                                 <code
                                     className={clsx(
@@ -58,7 +65,13 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                         }
 
                         return (
-                            <code className={className} {...props}>
+                            <code
+                                className={clsx(
+                                    className,
+                                    "bg-violet-100/60 dark:bg-violet-500/15 px-1.5 py-0.5 rounded-md font-mono text-[0.875em] text-violet-700 dark:text-violet-300 font-medium inline-block box-border align-baseline leading-none"
+                                )}
+                                {...props}
+                            >
                                 {children}
                             </code>
                         );
