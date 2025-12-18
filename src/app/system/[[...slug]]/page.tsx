@@ -1,12 +1,11 @@
 import { SystemPageClient } from "./client";
-import fs from 'fs';
-import path from 'path';
+import { getServerConfig } from "@/lib/server-utils"; // Import helper
 
 export async function generateStaticParams() {
     try {
-        const configPath = path.join(process.cwd(), 'content/xeocontext.config.json');
-        const configStr = fs.readFileSync(configPath, 'utf8');
-        const config = JSON.parse(configStr);
+        const config = await getServerConfig();
+        if (!config) return [{ slug: [] }];
+
 
         const paths: { slug: string[] }[] = [];
 
