@@ -1,53 +1,70 @@
-# Stage 1: Build
-FROM node:20-alpine AS builder
+# -----------------------------------------------------------------------------
+# Production Dockerfile
+# Strategy: "Baked-in Content"
+# 
+# This image includes the application code AND the content snapshot at build time.
+# The content is immutable for the lifecycle of this container.
+# -----------------------------------------------------------------------------
 
+# --- Stage 1: Dependencies ---
+FROM node:22-alpine AS deps
 WORKDIR /app
+# Install libc for potential native deps compatibility
+RUN apk add --no-cache libc6-compat
 
 # Enable pnpm
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Install dependencies
 COPY package.json pnpm-lock.yaml ./
+# Install dependencies (frozen-lockfile for consistency)
 RUN pnpm install --frozen-lockfile
 
-# Copy source code
+# --- Stage 2: Builder ---
+FROM node:22-alpine AS builder
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the application (files will be output to /app/out)
-RUN pnpm run build
+# Copy the content directory to bake it into the build context
+# This ensures it's available for static generation or runtime reading
+COPY content ./content
 
-# Stage 2: Serve
-FROM nginx:alpine
+# Disable Next.js telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Remove default nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
+# Build the application
+RUN pnpm build
 
-# Copy static assets from builder stage
-COPY --from=builder /app/out /usr/share/nginx/html
+# --- Stage 3: Runner ---
+FROM node:22-alpine AS runner
+WORKDIR /app
 
-# Create a custom Nginx configuration for SPA/Next.js routing
-# try_files ensures that if a file doesn't exist (e.g. clean URL), it falls back to .html or index.html
-RUN echo 'server { \
-    listen 80; \
-    server_name localhost; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    \
-    location / { \
-        try_files $uri $uri.html $uri/index.html /index.html; \
-    } \
-    \
-    # Cache static assets \
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ { \
-        expires 1y; \
-        add_header Cache-Control "public, no-transform"; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Expose port 80
-EXPOSE 80
+# Create a non-root user (security best practice)
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Copy necessary files
+# Copy public assets
+COPY --from=builder /app/public ./public
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# IMPORTANT: Explicitly copy the 'content' directory
+# Since we read it from the filesystem at runtime, it must be present.
+COPY --from=builder --chown=nextjs:nodejs /app/content ./content
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT=3000
+# 'server.js' is created by next build in standalone mode
+CMD ["node", "server.js"]

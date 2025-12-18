@@ -9,10 +9,6 @@ paths:
     $ref: '../../domains/identity/components/paths/auth_login.yaml'
   /v1/auth/register:
     $ref: '../../domains/identity/components/paths/auth_register.yaml'
-  /v1/users:
-    $ref: '../../domains/identity/components/paths/users_list.yaml'
-  /v1/users/{id}:
-    $ref: '../../domains/identity/components/paths/users_detail.yaml'
     
   # Todos
   /v1/todos:

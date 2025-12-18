@@ -1,29 +1,20 @@
-asyncapi: 3.0.0
+asyncapi: 2.6.0
 info:
   title: ExampleApp Unified Events
   version: 1.0.0
   description: Master Event definition
 channels:
   library/changes:
-    address: library/changes
     description: Events related to the Library structure (files added/removed)
-    messages:
-      libraryChange:
+    subscribe:
+      operationId: receiveLibraryChange
+      summary: Receive updates when the library structure changes
+      message:
         $ref: '../../domains/library/components/messages/LibraryChange.yaml'
   library/viewers:
-    address: library/viewers
     description: Events related to file viewing state (sync)
-    messages:
-      viewerSync:
+    subscribe:
+      operationId: receiveViewerSync
+      summary: Receive updates for viewer synchronization
+      message:
         $ref: '../../domains/library/components/messages/ViewerSync.yaml'
-operations:
-  receiveLibraryChange:
-    action: receive
-    channel:
-      $ref: '#/channels/library~1changes'
-    summary: Receive updates when the library structure changes
-  receiveViewerSync:
-    action: receive
-    channel:
-      $ref: '#/channels/library~1viewers'
-    summary: Receive updates for viewer synchronization

@@ -2,14 +2,13 @@ services:
   xeocontext:
     build:
       context: ../..
+      # Prod option, best performance
       dockerfile: Dockerfile
+      # Dev option, with live-reload
+      # dockerfile: Dockerfile.dev
     container_name: xeocontext_example_app
     ports:
-      - "3000:80"
+      - "3000:3000"
     volumes:
-      # Mount the configuration file
-      - ./xeocontext.config.json:/usr/share/nginx/html/content/xeocontext.config.json
-      # Mount the content directories
-      - ./global:/usr/share/nginx/html/content/global
-      - ./domains:/usr/share/nginx/html/content/domains
+      - ./:/app/content
     restart: unless-stopped
