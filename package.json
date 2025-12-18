@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "rm -rf public/content && mkdir -p public/content && cp -r content/* public/content/",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
