@@ -4,7 +4,7 @@ import path from 'path';
 
 export async function generateStaticParams() {
     try {
-        const configPath = path.join(process.cwd(), 'public/content/xeocontext.config.json');
+        const configPath = path.join(process.cwd(), 'content/xeocontext.config.json');
         const configStr = fs.readFileSync(configPath, 'utf8');
         const config = JSON.parse(configStr);
 

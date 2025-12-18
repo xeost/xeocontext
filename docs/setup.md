@@ -69,7 +69,7 @@ If you want to modify the customized UI or build the image yourself:
     ```bash
     pnpm dev
     ```
-    *Note: In dev mode, content is served from `public/content`. You may need to update files there to see changes.*
+    *Note: In dev mode, content is served from `content`. You may need to update files there to see changes.*
 
 4.  Build the Docker image:
     ```bash

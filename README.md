@@ -17,7 +17,7 @@ XeoContext is designed to be deployed as a Docker container with a read-only vol
 
 ## AI Integration
 
-This repository is designed to be the "Source of Truth" for system design. The `public/content` directory is intended to be read by AI Coding Agents (via MCP Servers or direct access) to scaffold and maintain other repositories based on the designs defined here. But from a clean system design content repository, see `examples/markdown-openapi-asyncapi` for a quickstart.
+This repository is designed to be the "Source of Truth" for system design. The `content` directory is intended to be read by AI Coding Agents (via MCP Servers or direct access) to scaffold and maintain other repositories based on the designs defined here. But from a clean system design content repository, see `examples/markdown-openapi-asyncapi` for a quickstart.
 
 ## Usage
 
@@ -35,7 +35,7 @@ This repository is designed to be the "Source of Truth" for system design. The `
 
 ### Content Configuration
 
-The application reads from the `public/content` directory (which becomes `/content` in the production build).
+The application reads from the `content` directory (which becomes `/content` in the production build).
 
 **Directory Structure:**
 ```
