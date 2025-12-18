@@ -46,7 +46,7 @@ export function AsyncAPIViewer({ schema }: AsyncAPIViewerProps) {
             {/* @ts-ignore - Web Component */}
             <asyncapi-component
                 ref={componentRef}
-                cssImportPath="https://unpkg.com/@asyncapi/react-component@latest/styles/default.min.css"
+                cssImportPath="/assets/asyncapi.min.css"
                 config='{"showErrors": true, "sidebar": {"show": true}}'>
                 {/* @ts-ignore - Web Component */}
             </asyncapi-component>
