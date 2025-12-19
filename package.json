@@ -4,13 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "prebuild": "rm -rf public/content && mkdir -p public/content && cp -r content/* public/content/",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.11.0",
     "@apidevtools/json-schema-ref-parser": "^15.1.3",
     "@apidevtools/swagger-parser": "^12.1.0",
     "@tailwindcss/typography": "^0.5.19",
@@ -40,8 +38,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "wrangler": "^4.51.0"
+    "typescript": "^5"
   },
   "browser": {
     "fs": false,
