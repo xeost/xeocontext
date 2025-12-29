@@ -33,4 +33,4 @@ EXPOSE 3000
 
 # Use development server with Turbopack for fast updates
 ENV NODE_ENV=development
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "live"]
