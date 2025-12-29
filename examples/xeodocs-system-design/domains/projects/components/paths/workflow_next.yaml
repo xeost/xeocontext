@@ -1,0 +1,46 @@
+get:
+  tags:
+    - Workflow
+  summary: Get the next file to translate (CLI)
+  operationId: getProjectLanguageNextFile
+  description: Returns the highest priority pending/outdated file for the authenticated context (project/lang).
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: languageId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: File details and AI prompt
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/NextFileResponse.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: No files pending translation
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

@@ -1,0 +1,156 @@
+get:
+  tags:
+    - SpecialPaths
+  summary: Get a special path
+  operationId: getProjectSpecialPath
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: specialPathId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: Special path details
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/SpecialPath.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Special path not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+patch:
+  tags:
+    - SpecialPaths
+  summary: Update a special path
+  operationId: updateProjectSpecialPath
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: specialPathId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/SpecialPath.yaml'
+  responses:
+    '200':
+      description: Special path updated
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/SpecialPath.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Special path not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+delete:
+  tags:
+    - SpecialPaths
+  summary: Remove a special path
+  operationId: removeProjectSpecialPath
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: specialPathId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '204':
+      description: Special path removed
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Special path not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

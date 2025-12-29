@@ -1,0 +1,19 @@
+type: object
+required:
+  - page
+  - limit
+  - totalItems
+  - totalPages
+properties:
+  page:
+    type: integer
+    example: 1
+  limit:
+    type: integer
+    example: 20
+  totalItems:
+    type: integer
+    example: 100
+  totalPages:
+    type: integer
+    example: 5

@@ -1,0 +1,128 @@
+get:
+  tags:
+    - UserPreferences
+  summary: List user preferences
+  operationId: listUserPreferences
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: query
+      name: search
+      schema:
+        type: string
+      description: Search by key
+    - in: query
+      name: page
+      schema:
+        type: integer
+        default: 1
+    - in: query
+      name: limit
+      schema:
+        type: integer
+        default: 20
+    - in: query
+      name: sortBy
+      schema:
+        type: string
+      description: Field to sort by
+    - in: query
+      name: order
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: asc
+      description: Sort order
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: List of preferences
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+              - pagination
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../schemas/UserPreference.yaml'
+              pagination:
+                $ref: '../../../common/components/schemas/Pagination.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: User not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+post:
+  tags:
+    - UserPreferences
+  summary: Set a user preference
+  operationId: setUserPreference
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/UserPreference.yaml'
+  responses:
+    '201':
+      description: Preference set
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/UserPreference.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

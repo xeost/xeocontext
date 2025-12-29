@@ -1,0 +1,3 @@
+schema:
+  type: integer
+description: The number of seconds left in the current period

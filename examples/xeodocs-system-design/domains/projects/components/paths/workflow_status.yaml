@@ -1,0 +1,54 @@
+get:
+  tags:
+    - Workflow
+  summary: Get project translation status (CLI)
+  operationId: getProjectLanguageStatus
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: languageId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: Status summary
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                properties:
+                  pendingCount:
+                    type: integer
+                  outdatedCount:
+                    type: integer
+                  totalFiles:
+                    type: integer
+                  progressPercentage:
+                    type: number
+                    format: float
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

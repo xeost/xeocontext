@@ -1,0 +1,16 @@
+openapi: 3.0.3
+info:
+  title: Configuration Domain API
+  version: 1.0.0
+  description: System Configuration Management
+
+paths:
+  /configurations:
+    $ref: './components/paths/configurations.yaml'
+  /configurations/{key}:
+    $ref: './components/paths/configurations_key.yaml'
+
+components:
+  schemas:
+    Configuration:
+      $ref: './components/schemas/Configuration.yaml'

@@ -1,0 +1,159 @@
+get:
+  tags:
+    - Projects
+  summary: Get a project by ID
+  operationId: getProject
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: query
+      name: expand
+      schema:
+        type: array
+        items:
+          type: string
+          enum: [languages]
+      description: Expand related resources
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: Project details
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/Project.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Project not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+patch:
+  tags:
+    - Projects
+  summary: Update a project
+  operationId: updateProject
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - cookieAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            slug:
+              type: string
+            sourceWebsiteUrl:
+              type: string
+            sourceRepoUrl:
+              type: string
+            sourceBranch:
+              type: string
+            description:
+              type: string
+            isActive:
+              type: boolean
+  responses:
+    '200':
+      description: Project updated
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/Project.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Project not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+delete:
+  tags:
+    - Projects
+  summary: Delete a project
+  operationId: deleteProject
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - cookieAuth: []
+  responses:
+    '204':
+      description: Project deleted successfully
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Project not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

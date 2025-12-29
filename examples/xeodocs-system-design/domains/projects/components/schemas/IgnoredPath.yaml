@@ -1,0 +1,18 @@
+type: object
+required:
+  - id
+  - projectId
+  - pattern
+properties:
+  id:
+    type: string
+    format: uuid
+    readOnly: true
+  projectId:
+    type: string
+    format: uuid
+    readOnly: true
+  pattern:
+    type: string
+    minLength: 1
+    maxLength: 500

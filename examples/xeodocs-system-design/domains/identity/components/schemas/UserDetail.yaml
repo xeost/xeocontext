@@ -1,0 +1,7 @@
+allOf:
+  - $ref: './User.yaml'
+  - type: object
+    properties:
+      apiKey:
+        type: string
+        description: API Key for CLI access (sensitive)

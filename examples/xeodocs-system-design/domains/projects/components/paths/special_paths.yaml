@@ -1,0 +1,128 @@
+get:
+  tags:
+    - SpecialPaths
+  summary: List special paths for a project
+  operationId: listProjectSpecialPaths
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: query
+      name: search
+      schema:
+        type: string
+      description: Search by purpose or pattern
+    - in: query
+      name: page
+      schema:
+        type: integer
+        default: 1
+    - in: query
+      name: limit
+      schema:
+        type: integer
+        default: 20
+    - in: query
+      name: sortBy
+      schema:
+        type: string
+      description: Field to sort by
+    - in: query
+      name: order
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: asc
+      description: Sort order
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: List of special paths
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+              - pagination
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../schemas/SpecialPath.yaml'
+              pagination:
+                $ref: '../../../common/components/schemas/Pagination.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Project not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+post:
+  tags:
+    - SpecialPaths
+  summary: Add a special path to a project
+  operationId: addProjectSpecialPath
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/SpecialPath.yaml'
+  responses:
+    '201':
+      description: Special path added
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/SpecialPath.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

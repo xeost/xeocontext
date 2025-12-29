@@ -50,42 +50,69 @@ export function SystemPageClient() {
     // Let's stick to showing activeItem found or first one.
 
     useEffect(() => {
-        if (!activeItem) return;
+        // If we found a direct match in the navigation, use it.
+        // However, we also need to handle the case where the user navigates to a folder path
+        // (e.g. /system/global/architecture) that isn't explicitly in the nav items as a page,
+        // but physically exists or conceptually maps to a child.
 
         async function load() {
             setLoading(true);
             try {
-                // Heuristic to find the file
-                // 1. Try href + ".md" (unless href is /, then README.md)
-                // 2. Try href + "/readme.md"
-                // 3. Try href + "/index.md" 
+                // 1. If we have a direct active item from config (exact match), try to load it.
+                if (activeItem) {
+                    // Special case: If we are at root ("/" slugPath) but the resolved activeItem (defaults to first item) 
+                    // is NOT explicitly for "/", we should redirect to that item's URL.
+                    // This handles "landing on /system-design" -> "redirect to first article".
+                    if (slugPath === "/" && activeItem.href !== "/") {
+                        const target = `/system-design${activeItem.href}`; // item.href is like "/global/architecture"
+                        router.replace(target);
+                        return; // Stop loading content for root, just redirect
+                    }
 
-                let possiblePaths = [];
-                if (activeItem.href === "/") {
-                    possiblePaths.push("README.md");
-                    possiblePaths.push("index.md");
-                } else {
-                    possiblePaths.push(`${activeItem.href}.md`);
-                    possiblePaths.push(`${activeItem.href}/readme.md`);
-                    possiblePaths.push(`${activeItem.href}/index.md`);
-                }
+                    let possiblePaths = [];
+                    if (activeItem.href === "/") {
+                        possiblePaths.push("README.md", "index.md");
+                    } else {
+                        possiblePaths.push(`${activeItem.href}.md`);
+                        possiblePaths.push(`${activeItem.href}/readme.md`);
+                        possiblePaths.push(`${activeItem.href}/index.md`);
+                    }
 
-                // Try sequentially
-                let loadedContent = null;
-                for (const p of possiblePaths) {
-                    try {
-                        loadedContent = await fetchContent(p);
-                        if (loadedContent) break;
-                    } catch (e) {
-                        // ignore
+                    // Try loading exact content
+                    for (const p of possiblePaths) {
+                        try {
+                            const found = await fetchContent(p);
+                            if (found) {
+                                setContent(found);
+                                setLoading(false);
+                                return;
+                            }
+                        } catch (e) { /* ignore */ }
                     }
                 }
 
-                if (loadedContent) {
-                    setContent(loadedContent);
-                } else {
-                    setContent("# Content not found\nCould not load content for this path.");
+                // 2. If no direct content found (or no activeItem matched exactly), 
+                // we might be at a directory path. We should look for the *first* child 
+                // in the navigation tree that starts with this prefix.
+
+                // Filter items that strictly start with current path
+                // e.g. slugPath = /global/architecture
+                // candidates: /global/architecture/system-overview, /global/architecture/decisions...
+                const cleanSlug = slugPath === "/" ? "" : slugPath;
+                const candidate = allItems.find(item =>
+                    item.href.startsWith(cleanSlug + "/") && item.href !== cleanSlug
+                );
+
+                if (candidate) {
+                    // Redirect to the first available child
+                    const target = candidate.href === "/" ? "/system-design" : `/system-design${candidate.href}`;
+                    router.replace(target);
+                    return;
                 }
+
+                // 3. Fallback: No content and no children found.
+                setContent("# Content not found\nCould not load content for this path.");
+
             } catch (err) {
                 console.error("Failed system design content", err);
                 setContent("# Error\nFailed to load content.");
@@ -95,7 +122,7 @@ export function SystemPageClient() {
         }
 
         load();
-    }, [activeItem, config]);
+    }, [activeItem, config, slugPath, router]);
 
     // Close mobile menu on slug change
     useEffect(() => {

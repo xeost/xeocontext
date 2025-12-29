@@ -1,0 +1,12 @@
+type: object
+required:
+  - data
+properties:
+  data:
+    type: object
+    properties:
+      file:
+        $ref: './File.yaml'
+      prompt:
+        type: string
+        description: Contextual prompt to be used by the AI for translation
