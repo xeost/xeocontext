@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Script from "next/script";
 import { useTheme } from "next-themes";
 
 declare global {
@@ -22,7 +21,12 @@ export function AsyncAPIViewer({ schema }: AsyncAPIViewerProps) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
+        const loadComponent = async () => {
+            // @ts-ignore
+            await import('@asyncapi/web-component/lib/asyncapi-web-component.js');
+            setMounted(true);
+        };
+        loadComponent();
     }, []);
 
     useEffect(() => {
@@ -40,11 +44,6 @@ export function AsyncAPIViewer({ schema }: AsyncAPIViewerProps) {
 
     return (
         <div className="asyncapi-wrapper bg-white dark:bg-gray-800 backdrop-blur-sm rounded-xl overflow-hidden shadow-sm border border-border/50 dark:border-border/10 min-h-[500px] relative transition-colors duration-300">
-            <Script
-                src="https://unpkg.com/@asyncapi/web-component@next/lib/asyncapi-web-component.js"
-                strategy="lazyOnload"
-            />
-
             <style jsx global>{`
                 /* Hide the default header/logo if possible or style content */
                 asyncapi-component {

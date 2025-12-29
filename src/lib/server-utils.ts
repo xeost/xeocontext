@@ -3,6 +3,12 @@ import path from 'path';
 import { XeoConfig } from './types';
 
 export function getContentPath() {
+    const customPath = process.env.XEOCONTEXT_CONTENT_DIR;
+    if (customPath) {
+        return path.isAbsolute(customPath)
+            ? customPath
+            : path.join(process.cwd(), customPath);
+    }
     return path.join(process.cwd(), 'content');
 }
 

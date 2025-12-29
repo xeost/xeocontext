@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
 
+import { getContentPath } from '@/lib/server-utils';
+
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ slug: string[] }> }
@@ -16,7 +18,7 @@ export async function GET(
     }
 
     try {
-        const contentDir = path.join(process.cwd(), 'content');
+        const contentDir = getContentPath();
         const fileAbsolutePath = path.join(contentDir, filePath);
 
         // Check if file exists
