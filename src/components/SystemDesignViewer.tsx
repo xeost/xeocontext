@@ -345,30 +345,31 @@ export function SystemDesignViewer({ isActive }: SystemDesignViewerProps) {
         };
     }, [toc, loading]);
 
-    // Render helper for sidebar links
-    const renderSidebarLink = (item: NavItem) => {
-        // Construct the link href. 
-        // If item.href is "/", link to "/system"
-        // Else link to "/system" + item.href (removing leading slash if needed to look clean, or just append)
-        // Actually, our route is /system/[[...slug]].
-        // If href is /global/infrastructure, we want /system/global/infrastructure.
-
+    // Recursive render helper for sidebar items
+    const renderSidebarItem = (item: NavItem) => {
         const linkHref = item.href === "/" ? "/system-design" : `/system-design${item.href}`;
-        const isActive = item.href === slugPath; // exact match
+        const isActive = item.href === slugPath;
+        const hasChildren = item.items && item.items.length > 0;
 
         return (
-            <Link
-                key={item.href}
-                href={linkHref}
-                className={clsx(
-                    "block w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-300 border",
-                    isActive
-                        ? "bg-linear-to-r from-violet-500/10 to-blue-500/10 text-violet-600 dark:text-violet-400 font-medium border-violet-200/50 dark:border-violet-800/50 shadow-sm"
-                        : "border-transparent text-muted-foreground hover:bg-violet-500/5 dark:hover:bg-violet-500/10 hover:text-violet-600 dark:hover:text-violet-300"
+            <div key={item.href} className="space-y-1">
+                <Link
+                    href={linkHref}
+                    className={clsx(
+                        "block w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-300 border",
+                        isActive
+                            ? "bg-linear-to-r from-violet-500/10 to-blue-500/10 text-violet-600 dark:text-violet-400 font-medium border-violet-200/50 dark:border-violet-800/50 shadow-sm"
+                            : "border-transparent text-muted-foreground hover:bg-violet-500/5 dark:hover:bg-violet-500/10 hover:text-violet-600 dark:hover:text-violet-300"
+                    )}
+                >
+                    {item.title}
+                </Link>
+                {hasChildren && (
+                    <div className="ml-3 pl-2 border-l border-border/40 space-y-1 my-1">
+                        {item.items!.map(subItem => renderSidebarItem(subItem))}
+                    </div>
                 )}
-            >
-                {item.title}
-            </Link>
+            </div>
         );
     };
 
@@ -404,7 +405,7 @@ export function SystemDesignViewer({ isActive }: SystemDesignViewerProps) {
                                     {processedNavigation.map((group, idx) => (
                                         <div key={idx} className="space-y-1">
                                             <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{group.title}</h3>
-                                            {group.items.map(renderSidebarLink)}
+                                            {group.items.map(item => renderSidebarItem(item))}
                                         </div>
                                     ))}
                                 </nav>
@@ -430,7 +431,7 @@ export function SystemDesignViewer({ isActive }: SystemDesignViewerProps) {
                             <h2 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                                 {group.title}
                             </h2>
-                            {group.items.map(renderSidebarLink)}
+                            {group.items.map(item => renderSidebarItem(item))}
                         </div>
                     ))}
                 </nav>
