@@ -1,6 +1,7 @@
 export interface NavItem {
     title: string;
     href: string;
+    items?: NavItem[];
 }
 
 export interface NavGroup {

@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useConfig } from "@/lib/config-context";
 import { fetchContent } from "@/lib/api";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -39,18 +39,55 @@ export function SystemDesignViewer({ isActive }: SystemDesignViewerProps) {
         ? (lastSystemPath === prefix ? "/" : lastSystemPath.slice(prefix.length))
         : "/";
 
-    // Flatten navigation for easy next/prev and searching
-    const allItems: NavItem[] = [];
-    if (config?.navigation) {
-        config.navigation.forEach((group: NavGroup) => {
-            if (group.items) {
-                allItems.push(...group.items);
+    // Normalize navigation to strip readme/index from paths
+    const processedNavigation = useMemo(() => {
+        if (!config?.navigation) return [];
+
+        const cleanHref = (href: string) => {
+            let h = href;
+            if (h.toLowerCase().endsWith("/readme")) h = h.slice(0, -7);
+            else if (h.toLowerCase().endsWith("/index")) h = h.slice(0, -6);
+            return h || "/";
+        };
+
+        const processItem = (item: NavItem): NavItem => ({
+            ...item,
+            href: cleanHref(item.href),
+            items: item.items?.map(processItem)
+        });
+
+        const processGroup = (group: NavGroup): NavGroup => ({
+            ...group,
+            items: group.items.map(processItem)
+        });
+
+        return config.navigation.map(processGroup);
+    }, [config?.navigation]);
+
+    // Flatten navigation for easy next/prev and searching, supporting nested items
+    const flattenItems = (items: NavItem[]): NavItem[] => {
+        let result: NavItem[] = [];
+        items.forEach(item => {
+            result.push(item);
+            if (item.items) {
+                result = result.concat(flattenItems(item.items));
             }
         });
-    }
+        return result;
+    };
+
+    const allItems: NavItem[] = [];
+    processedNavigation.forEach((group: NavGroup) => {
+        if (group.items) {
+            allItems.push(...flattenItems(group.items));
+        }
+    });
 
     // Find active item
-    const activeItem = allItems.find(item => item.href === slugPath) || allItems[0];
+    // If we have a specific slug (not root), we do NOT default to the first item immediately.
+    // We let the candidate logic below handle it if exact match fails.
+    const matchedItem = allItems.find(item => item.href === slugPath);
+    const activeItem = matchedItem || (slugPath === "/" ? allItems[0] : undefined);
 
     useEffect(() => {
         // Only load if configured AND initialized
@@ -364,7 +401,7 @@ export function SystemDesignViewer({ isActive }: SystemDesignViewerProps) {
                         <div className="max-h-[60vh] overflow-y-auto p-2">
                             {mobileTab === "menu" ? (
                                 <nav className="space-y-4 p-2">
-                                    {config.navigation.map((group, idx) => (
+                                    {processedNavigation.map((group, idx) => (
                                         <div key={idx} className="space-y-1">
                                             <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{group.title}</h3>
                                             {group.items.map(renderSidebarLink)}
@@ -388,7 +425,7 @@ export function SystemDesignViewer({ isActive }: SystemDesignViewerProps) {
             {/* Left Sidebar (Desktop) */}
             <aside className="hidden xl:block w-72 border-r border-border bg-muted/20 overflow-y-auto shrink-0 backdrop-blur-sm p-4">
                 <nav className="pt-3 space-y-8">
-                    {config.navigation.map((group, idx) => (
+                    {processedNavigation.map((group, idx) => (
                         <div key={idx} className="space-y-1">
                             <h2 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                                 {group.title}
