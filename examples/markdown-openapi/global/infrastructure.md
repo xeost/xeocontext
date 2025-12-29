@@ -1,4 +1,7 @@
-# Infrastructure & High Availability
+---
+title: "Infrastructure & High Availability"
+description: "The ExampleApp is designed to be deployed on a Kubernetes (K8s) cluster to ensure High Availability (HA), scalability, and resilience."
+---
 
 ## High Availability Deployment (Kubernetes)
 

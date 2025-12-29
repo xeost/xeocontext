@@ -1,9 +1,8 @@
 ---
 domain: notes
-
+title: "Notes Domain"
+description: "Manages rich text notes."
 ---
-
-# Notes Domain
 
 Manages rich text notes.
 

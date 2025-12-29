@@ -1,4 +1,7 @@
-# Infrastructure & Security
+---
+title: "Infrastructure & Security"
+description: "security is a paramount concern for the ExampleApp. We adopt a 'Defense in Depth' strategy."
+---
 
 ## Security Architecture
 

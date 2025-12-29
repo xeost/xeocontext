@@ -1,9 +1,8 @@
 ---
 domain: identity
-
+title: "Identity Domain"
+description: "This domain manages User Identities, Authentication, and Authorization."
 ---
-
-# Identity Domain
 
 This domain manages User Identities, Authentication, and Authorization.
 

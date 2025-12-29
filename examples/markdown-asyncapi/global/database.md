@@ -1,4 +1,7 @@
-# Database Schema Design
+---
+title: "Database Schema Design"
+description: "The system uses a relational database (PostgreSQL) to ensure data integrity and complex querying capabilities. Below is the high-level schema design."
+---
 
 The system uses a relational database (PostgreSQL) to ensure data integrity and complex querying capabilities. Below is the high-level schema design.
 

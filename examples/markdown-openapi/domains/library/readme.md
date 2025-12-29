@@ -1,10 +1,10 @@
 ---
 domain: library
-specs:
-  rest: ./openapi.yaml
+specs: 
+rest: ./openapi.yaml
+title: "Library Domain"
+description: "Manages files (Books, Images) and their synchronization state relative to users."
 ---
-
-# Library Domain
 
 Manages files (Books, Images) and their synchronization state relative to users.
 

@@ -1,4 +1,7 @@
-# General Code Conventions
+---
+title: "General Code Conventions"
+description: "While individual languages (TS, Go, Rust) have their own linters, these rules apply globally to the repo."
+---
 
 While individual languages (TS, Go, Rust) have their own linters, these rules apply globally to the repo.
 
@@ -17,4 +20,3 @@ While individual languages (TS, Go, Rust) have their own linters, these rules ap
 
 ## 4. Documentation
 -   **ADRs**: Whenever a significant architectural decision is made, create a new Record in `global/adrs`.
-

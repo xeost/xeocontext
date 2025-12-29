@@ -1,4 +1,7 @@
-# ExampleApp System Design
+---
+title: "ExampleApp System Design"
+description: "Welcome to the System Design repository for ExampleApp, a Local-First TODOs, Notes, and Library application."
+---
 
 Welcome to the System Design repository for **ExampleApp**, a Local-First TODOs, Notes, and Library application.
 

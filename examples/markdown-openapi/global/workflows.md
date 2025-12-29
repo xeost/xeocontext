@@ -1,4 +1,7 @@
-# System Workflows
+---
+title: "System Workflows"
+description: "1.  User submits `POST /v1/auth/register`."
+---
 
 ## 1. User Registration & Onboarding
 1.  User submits `POST /v1/auth/register`.

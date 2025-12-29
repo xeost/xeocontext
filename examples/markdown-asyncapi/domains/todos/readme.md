@@ -1,9 +1,8 @@
 ---
 domain: todos
-
+title: "Todos Domain"
+description: "Manages tasks and to-do lists."
 ---
-
-# Todos Domain
 
 Manages tasks and to-do lists.
 

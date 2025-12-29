@@ -1,11 +1,10 @@
 ---
 domain: library
-specs:
-
-  events: ./asyncapi.yaml
+specs: 
+events: ./asyncapi.yaml
+title: "Library Domain"
+description: "Manages files (Books, Images) and their synchronization state relative to users."
 ---
-
-# Library Domain
 
 Manages files (Books, Images) and their synchronization state relative to users.
 

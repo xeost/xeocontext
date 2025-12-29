@@ -1,4 +1,7 @@
-# ADR 001: Adoption of Domain-Driven Design (DDD) Structure
+---
+title: "ADR 001: Adoption of Domain-Driven Design (DDD) Structure"
+description: "- Status: Accepted"
+---
 
 - **Status**: Accepted
 - **Date**: 2025-12-17

@@ -91,6 +91,7 @@ export function AsyncAPIViewer({ schema, url }: AsyncAPIViewerProps) {
                 ref={componentRef}
                 cssImportPath={cssPath}
                 config='{"showErrors": true, "sidebar": {"show": true}}'>
+                {/* @ts-ignore - Web Component */}
             </asyncapi-component>
         </div>
     );

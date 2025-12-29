@@ -1,8 +1,8 @@
 ---
 trigger: always_on
+title: "System Design Repository Structure & Rules"
+description: "This repository hosts the pure system design content (Markdown, OpenAPI, AsyncAPI) for the software project. It is decoupled from the application code and designed to be mounted as a volume into th..."
 ---
-
-# System Design Repository Structure & Rules
 
 This repository hosts the **pure system design content** (Markdown, OpenAPI, AsyncAPI) for the software project. It is decoupled from the application code and designed to be mounted as a volume into the **XeoContext** viewer via `docker-compose.yml`.
 

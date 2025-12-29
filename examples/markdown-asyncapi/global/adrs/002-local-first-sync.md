@@ -1,4 +1,7 @@
-# ADR 002: Local-First Synchronization Strategy
+---
+title: "ADR 002: Local-First Synchronization Strategy"
+description: "- Status: Accepted"
+---
 
 - **Status**: Accepted
 - **Date**: 2025-12-17

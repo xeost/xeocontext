@@ -1,4 +1,7 @@
-# Error Handling Standards
+---
+title: "Error Handling Standards"
+description: "Errors must be consistent, informative, and secure."
+---
 
 Errors must be consistent, informative, and secure.
 

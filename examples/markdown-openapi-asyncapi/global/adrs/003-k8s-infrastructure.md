@@ -1,4 +1,7 @@
-# ADR 003: Kubernetes (K8s) for Infrastructure
+---
+title: "ADR 003: Kubernetes (K8s) for Infrastructure"
+description: "- Status: Accepted"
+---
 
 - **Status**: Accepted
 - **Date**: 2025-12-17

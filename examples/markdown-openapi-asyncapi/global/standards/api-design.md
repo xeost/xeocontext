@@ -1,4 +1,7 @@
-# REST API Design Standards
+---
+title: "REST API Design Standards"
+description: "All APIs in ExampleApp MUST adhere to the following standards to ensure consistency and usability."
+---
 
 All APIs in ExampleApp MUST adhere to the following standards to ensure consistency and usability.
 

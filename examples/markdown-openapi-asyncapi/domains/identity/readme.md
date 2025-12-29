@@ -1,10 +1,10 @@
 ---
 domain: identity
-specs:
-  rest: ./openapi.yaml
+specs: 
+rest: ./openapi.yaml
+title: "Identity Domain"
+description: "This domain manages User Identities, Authentication, and Authorization."
 ---
-
-# Identity Domain
 
 This domain manages User Identities, Authentication, and Authorization.
 

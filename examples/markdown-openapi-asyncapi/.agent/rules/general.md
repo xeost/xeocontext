@@ -1,5 +1,7 @@
 ---
 trigger: always_on
+title: "General"
+description: "- The project website domain is example-app.com"
 ---
 
 - The project website domain is example-app.com
