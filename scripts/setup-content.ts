@@ -77,10 +77,12 @@ function ensureGitRemote() {
             runCmd('git remote rename origin upstream');
             originUrl = ''; // Origin is gone/renamed
         } else {
-            console.log('   Adding "upstream" remote...');
             runCmd(`git remote add upstream ${CONFIG.upstreamUrl}`);
         }
     }
+
+    // Ensure upstream is read-only (prevent accidental pushes)
+    runCmd('git remote set-url --push upstream no_push');
 
     // 2. Cleanup 'origin' if it still points to xeost (e.g. if upstream already existed but origin remains)
     // Refresh originUrl just in case logic above changed things unexpectedly, though locally tracked via var
