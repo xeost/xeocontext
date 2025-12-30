@@ -1,3 +1,5 @@
+![XeoContext Header](xeocontext.webp)
+
 # XeoContext
 
 XeoContext is a modern "System Design" visualization tool. It is designed to be a lightweight, self-contained viewer for:
@@ -7,6 +9,19 @@ XeoContext is a modern "System Design" visualization tool. It is designed to be 
 - **AsyncAPI definitions**: visualized using AsyncAPI React component.
 
 XeoContext is designed to be deployed as a Docker container with a read-only volume mounted to provide the content.
+
+## Table of Contents
+
+- [Features](#features)
+- [AI Integration](#ai-integration)
+- [Usage with Live-reload](#usage-with-live-reload)
+- [Production Usage (without Live-reload)](#production-usage-without-live-reload)
+- [Deployment on Vercel](#deployment-on-vercel)
+  - [Maintaining Your Deployment](#maintaining-your-deployment)
+- [Development (Contributing)](#development-contributing)
+- [Content Configuration](#content-configuration)
+- [Extra Tips](#extra-tips)
+  - [Content Validation](#content-validation)
 
 ## Features
 
@@ -19,21 +34,128 @@ XeoContext is designed to be deployed as a Docker container with a read-only vol
 
 This repository is designed to be the "Source of Truth" for system design. The `content` directory is intended to be read by AI Coding Agents (via MCP Servers or direct access) to scaffold and maintain other repositories based on the designs defined here. But from a clean system design content repository, see `examples/markdown-openapi-asyncapi` for a quickstart.
 
-## Usage
+## Usage with Live-reload
 
-### Development
+For a quick start with a pre-configured environment, you can use the [XeoContext Template](https://github.com/xeost/xeocontext-template).
 
-1. Install dependencies:
+1. **Clone the template:**
+   ```bash
+   git clone https://github.com/xeost/xeocontext-template my-system-design
+   cd my-system-design
+   ```
+
+2. **Run with Docker Compose:**
+   The template includes a `docker-compose.yml` configured to use the `xeost/xeocontext-live-reload:latest` image.
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Edit Content:**
+   Modify the files in the `content` directory. The viewer will automatically reload to reflect your changes.
+
+**AI Support:**
+The template includes `.agent/rules/content.md`, which provides instructions for LLMs on how to structure the design content (DDD, OpenAPI, AsyncAPI).
+
+> **Note:** The template provides a minimal starting point. For comprehensive examples of directory structures and configurations, please refer to the [`examples`](examples) directory in this repository.
+
+## Production Usage (without Live-reload)
+
+If your content is static and will not be edited, you can switch to the production-optimized image for better performance.
+
+1.  Follow the steps in the [Usage with Live-reload](#usage-with-live-reload) section to set up your repository.
+2.  Edit the `docker-compose.yml` file and change the image name:
+
+    ```yaml
+    services:
+      xeocontext:
+        image: xeost/xeocontext:latest # Change from xeocontext-live-reload
+        # ... rest of the configuration
+    ```
+
+## Deployment on Vercel
+
+This workflow allows you to deploy a customized version of XeoContext (with your embedded content) to Vercel.
+
+1.  **Clone the XeoContext Viewer:**
+    Start by cloning the base viewer repository.
+    ```bash
+    git clone https://github.com/xeost/xeocontext.git my-viewer
+    cd my-viewer
+    pnpm install
+    ```
+
+2.  **Check Available Versions:**
+    See which versions of XeoContext are available to pin your deployment to.
+    ```bash
+    pnpm list-releases
+    ```
+
+3.  **Create Deployment Repository:**
+    Create a new empty repository on GitHub (e.g., `github-user/system-design-example`) where your customized viewer will live.
+
+4.  **Configure Environment:**
+    Copy `.env.example` to `.env` and set the following variables:
+    ```bash
+    cp .env.example .env
+    ```
+
+    - **`XEOCONTEXT_CONTENT_TYPE`**: Set to `'local'` (if content is on your machine) or `'git'` (if content is in a remote repo).
+    - **`XEOCONTEXT_CONTENT_SOURCE`**: Path to local directory (relative or absolute) or Git URL of your content repository.
+    - **`XEOCONTEXT_TAG`**: The XeoContext version tag you want to use (e.g., `v0.1.0`).
+    - **`XEOCONTEXT_DEPLOY_REPO`**: The URL of the GitHub repository you created in step 3.
+
+5.  **Sync & Setup:**
+    Run the setup script. This will reset the code to the specified tag, copy your content into the `content` directory, and configure the git remotes (`upstream` for updates, `origin` for your deployment).
+    ```bash
+    pnpm setup-content
+    ```
+
+6.  **Push to GitHub:**
+    Commit the changes and push to your deployment repository.
+    ```bash
+    git add .
+    git commit -m "Initial deployment"
+    git push -u origin main
+    ```
+    *Note: Connect this repository to Vercel for automatic deployments.*
+
+### Maintaining Your Deployment
+
+**Updating XeoContext Version:**
+If a new version of XeoContext is released:
+1. Update `XEOCONTEXT_TAG` in your `.env` file.
+2. Run `pnpm setup-content`.
+3. Commit and push.
+
+**Updating Content:**
+If you change your design content (in your local folder or external content repo):
+1. Run `pnpm setup-content`.
+2. Commit and push.
+
+## Development (Contributing)
+
+1. **Install dependencies:**
    ```bash
    pnpm install
    ```
-2. Run development server:
+2. **Configure Environment:**
+   Copy `.env.example` to `.env` and configure `XEOCONTEXT_CONTENT_DIR` to point to a sample content directory.
+   ```bash
+   cp .env.example .env
+   ```
+   Open `.env` and uncomment/set:
+   ```env
+   XEOCONTEXT_CONTENT_DIR=./examples/markdown-openapi-asyncapi
+   ```
+
+3. **Run development server:**
    ```bash
    pnpm dev
    ```
-3. Open [http://localhost:3000](http://localhost:3000).
+4. **Open Application:**
+   Navigate to [http://localhost:12051](http://localhost:12051).
 
-### Content Configuration
+## Content Configuration
 
 The application reads from the `content` directory (which becomes `/content` in the production build).
 
@@ -97,6 +219,8 @@ The application reads from the `content` directory (which becomes `/content` in 
 }
 ```
 
+## Extra Tips
+
 ### Content Validation
 
 It is recommended to validate your spec files before committing changes to ensure the viewer renders them correctly.
@@ -118,75 +242,4 @@ You can use [AsyncAPI CLI](https://www.asyncapi.com/docs/tools/cli) to validate 
 ```bash
 # Validate the main gateway file
 pnpm dlx @asyncapi/cli validate content/global/gateway/asyncapi.yaml
-```
-
-### Customization & Deployment
-
-To customize this application with your own content (Markdown, OpenAPI, AsyncAPI) and deploy it to your own repository (e.g., GitHub, to later deploy on Vercel), follow this workflow.
-
-#### 1. Setup Environment
-Copy `.env.example` to `.env` and configure the deployment variables:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
-- **Content Source**: Set `XEOCONTEXT_CONTENT_TYPE` ('local' or 'git') and `XEOCONTEXT_CONTENT_SOURCE`.
-- **Version**: Set `XEOCONTEXT_TAG` to the desired XeoContext version (check available versions with `pnpm list-releases`).
-- **Deployment**: Set `XEOCONTEXT_DEPLOY_REPO` to your own GitHub repository URL.
-
-#### 2. Run Setup Script
-Execute the setup script to position the app on the specified version, sync your content, and configure git remotes:
-
-```bash
-pnpm setup-content
-```
-
-The script will:
-- Reset the application code to the specified `XEOCONTEXT_TAG` (fetching from upstream if needed).
-- Replace the `content` directory with your synchronized content.
-- Rename the default remote to `upstream` and add your `XEOCONTEXT_DEPLOY_REPO` as `origin` (if not already configured).
-
-#### 3. Push to Deploy
-Finally, commit the changes and push to your deployment repository:
-
-```bash
-git add .
-git commit -m "Deploys XeoContext custom build"
-git push -u origin main
-```
-
-To update the XeoContext engine in the future, simply update the `XEOCONTEXT_TAG` in `.env` and run `pnpm setup-content` again.
-
-### Docker Deployment
-
-To update the content without rebuilding the image, mount the content directories and configuration file as volumes.
-
-Example with Docker Compose:
-
-```yaml
-version: '3.8'
-
-services:
-  xeocontext:
-    build:
-      context: ..
-      dockerfile: Dockerfile
-    container_name: xeocontext_example_app
-    ports:
-      - "3000:80"
-    volumes:
-      # Mount the configuration file
-      - ./xeocontext.config.json:/usr/share/nginx/html/content/xeocontext.config.json
-      # Mount the content directories
-      - ./global:/usr/share/nginx/html/content/global
-      - ./domains:/usr/share/nginx/html/content/domains
-    restart: unless-stopped
-```
-
-Then, run it:
-
-```bash
-docker compose up -d
 ```
