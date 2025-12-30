@@ -65,41 +65,43 @@ function runCmd(cmd: string, cwd: string = process.cwd(), ignoreError = false): 
 function ensureGitRemote() {
     console.log('🔧 Configuring Git remotes...');
 
-    const remotes = runCmd('git remote -v');
+    const getUrl = (remote: string) => runCmd(`git remote get-url ${remote}`, process.cwd(), true);
+    let originUrl = getUrl('origin');
+    const upstreamUrl = getUrl('upstream');
 
-    // 1. Configure Upstream
-    if (!remotes.includes('upstream')) {
-        // specific check: if origin is xeost, rename it to upstream
-        if (remotes.includes('origin') && remotes.includes('github.com/xeost/xeocontext')) {
-            console.log('   Renaming default "origin" to "upstream"...');
+    // 1. Setup 'upstream'
+    if (!upstreamUrl) {
+        // If origin looks like xeo context, rename it to upstream
+        if (originUrl && (originUrl.includes('xeost/xeocontext') || originUrl.includes('xeocontext.git'))) {
+            console.log('   Renaming detected upstream "origin" to "upstream"...');
             runCmd('git remote rename origin upstream');
+            originUrl = ''; // Origin is gone/renamed
         } else {
             console.log('   Adding "upstream" remote...');
             runCmd(`git remote add upstream ${CONFIG.upstreamUrl}`);
         }
-    } else {
-        console.log('   "upstream" remote already exists.');
     }
 
-    // 2. Configure Origin (Deploy Repo)
-    // If we renamed origin above, it's gone. If we didn't, it might still be there.
+    // 2. Cleanup 'origin' if it still points to xeost (e.g. if upstream already existed but origin remains)
+    // Refresh originUrl just in case logic above changed things unexpectedly, though locally tracked via var
+    originUrl = getUrl('origin');
+
+    if (originUrl && (originUrl.includes('xeost/xeocontext') || originUrl.includes('xeocontext.git'))) {
+        console.log('   Removing "origin" remote (points to upstream source)...');
+        runCmd('git remote remove origin');
+        originUrl = '';
+    }
+
+    // 3. Setup 'origin' for deployment
     if (CONFIG.deployRepo) {
-        const currentRemotes = runCmd('git remote');
-        if (!currentRemotes.includes('origin')) {
+        if (!originUrl) {
             console.log(`   Adding "origin" remote: ${CONFIG.deployRepo}`);
             runCmd(`git remote add origin ${CONFIG.deployRepo}`);
+        } else if (originUrl !== CONFIG.deployRepo) {
+            console.log(`   Updating "origin" remote URL to: ${CONFIG.deployRepo}`);
+            runCmd(`git remote set-url origin ${CONFIG.deployRepo}`);
         } else {
-            // Check if origin matches deployRepo. If not, maybe warn? 
-            // For now we assume user handles it if it exists distinct from xeost.
-            const originUrl = runCmd('git remote get-url origin');
-            if (originUrl !== CONFIG.deployRepo) {
-                console.warn(`⚠️  "origin" remote exists but does not match XEOCONTEXT_DEPLOY_REPO.`);
-                console.warn(`   Current: ${originUrl}`);
-                console.warn(`   Target:  ${CONFIG.deployRepo}`);
-                console.warn(`   Please fix manually if needed: git remote set-url origin ${CONFIG.deployRepo}`);
-            } else {
-                console.log('   "origin" remote is correctly configured.');
-            }
+            console.log('   "origin" remote is correctly configured.');
         }
     }
 }
@@ -209,6 +211,12 @@ function syncContent() {
     } else {
         console.error(`❌ Unknown content type: ${CONFIG.contentType}`);
         process.exit(1);
+    }
+
+    // Ensure .gitkeep exists to avoid potential git conflicts with upstream
+    const gitKeepPath = path.join(CONTENT_DIR, '.gitkeep');
+    if (!fs.existsSync(gitKeepPath)) {
+        fs.writeFileSync(gitKeepPath, '');
     }
 
     console.log('✅ Content synced successfully.');
