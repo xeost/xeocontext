@@ -1,9 +1,0 @@
-type: object
-properties:
-  isFavorite:
-    type: boolean
-    description: Whether the image is marked as favorite
-  rotation:
-    type: integer
-    description: Rotation data if applicable
-    default: 0

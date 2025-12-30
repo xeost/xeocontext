@@ -120,6 +120,45 @@ You can use [AsyncAPI CLI](https://www.asyncapi.com/docs/tools/cli) to validate 
 pnpm dlx @asyncapi/cli validate content/global/gateway/asyncapi.yaml
 ```
 
+### Customization & Deployment
+
+To customize this application with your own content (Markdown, OpenAPI, AsyncAPI) and deploy it to your own repository (e.g., GitHub, to later deploy on Vercel), follow this workflow.
+
+#### 1. Setup Environment
+Copy `.env.example` to `.env` and configure the deployment variables:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+- **Content Source**: Set `XEOCONTEXT_CONTENT_TYPE` ('local' or 'git') and `XEOCONTEXT_CONTENT_SOURCE`.
+- **Version**: Set `XEOCONTEXT_TAG` to the desired XeoContext version (check available versions with `pnpm list-releases`).
+- **Deployment**: Set `XEOCONTEXT_DEPLOY_REPO` to your own GitHub repository URL.
+
+#### 2. Run Setup Script
+Execute the setup script to position the app on the specified version, sync your content, and configure git remotes:
+
+```bash
+pnpm setup-content
+```
+
+The script will:
+- Reset the application code to the specified `XEOCONTEXT_TAG` (fetching from upstream if needed).
+- Replace the `content` directory with your synchronized content.
+- Rename the default remote to `upstream` and add your `XEOCONTEXT_DEPLOY_REPO` as `origin` (if not already configured).
+
+#### 3. Push to Deploy
+Finally, commit the changes and push to your deployment repository:
+
+```bash
+git add .
+git commit -m "Deploys XeoContext custom build"
+git push -u origin main
+```
+
+To update the XeoContext engine in the future, simply update the `XEOCONTEXT_TAG` in `.env` and run `pnpm setup-content` again.
+
 ### Docker Deployment
 
 To update the content without rebuilding the image, mount the content directories and configuration file as volumes.
