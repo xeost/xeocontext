@@ -1,0 +1,32 @@
+get:
+  tags:
+    - Users
+  summary: Get current user
+  operationId: getCurrentUser
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: Current user details
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/UserDetail.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

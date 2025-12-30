@@ -1,0 +1,54 @@
+openapi: 3.0.3
+info:
+  title: Projects Domain API
+  version: 1.0.0
+  description: Project Lifecycle, Languages, and Files
+
+paths:
+  /projects:
+    $ref: './components/paths/projects.yaml'
+  /projects/{projectId}:
+    $ref: './components/paths/projects_id.yaml'
+  /projects/{projectId}/languages:
+    $ref: './components/paths/languages.yaml'
+  /projects/{projectId}/languages/{languageId}:
+    $ref: './components/paths/languages_id.yaml'
+  /projects/{projectId}/ignored-paths:
+    $ref: './components/paths/ignored_paths.yaml'
+  /projects/{projectId}/ignored-paths/{ignoredPathId}:
+    $ref: './components/paths/ignored_paths_id.yaml'
+  /projects/{projectId}/special-paths:
+    $ref: './components/paths/special_paths.yaml'
+  /projects/{projectId}/special-paths/{specialPathId}:
+    $ref: './components/paths/special_paths_id.yaml'
+  /projects/{projectId}/languages/{languageId}/files:
+    $ref: './components/paths/files.yaml'
+  /projects/{projectId}/languages/{languageId}/files/{fileId}:
+    $ref: './components/paths/files_id.yaml'
+  /projects/{projectId}/languages/{languageId}/next-file:
+    $ref: './components/paths/workflow_next.yaml'
+  /projects/{projectId}/languages/{languageId}/submissions:
+    $ref: './components/paths/workflow_submit.yaml'
+  /projects/{projectId}/languages/{languageId}/status:
+    $ref: './components/paths/workflow_status.yaml'
+
+components:
+  schemas:
+    Project:
+      $ref: './components/schemas/Project.yaml'
+    Language:
+      $ref: './components/schemas/Language.yaml'
+    File:
+      $ref: './components/schemas/File.yaml'
+    FileStatus:
+      $ref: './components/schemas/FileStatus.yaml'
+    IgnoredPath:
+      $ref: './components/schemas/IgnoredPath.yaml'
+    SpecialPath:
+      $ref: './components/schemas/SpecialPath.yaml'
+    NextFileResponse:
+      $ref: './components/schemas/NextFileResponse.yaml'
+    SubmitRequest:
+      $ref: './components/schemas/SubmitRequest.yaml'
+    SubmitResponse:
+      $ref: './components/schemas/SubmitResponse.yaml'

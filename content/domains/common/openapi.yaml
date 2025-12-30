@@ -1,0 +1,26 @@
+openapi: 3.0.3
+info:
+  title: Common Domain API
+  version: 1.0.0
+  description: Shared components and standards
+
+paths:
+  /health:
+    $ref: './components/paths/health.yaml'
+
+components:
+  headers:
+    X-RateLimit-Limit:
+      $ref: './components/headers/X-RateLimit-Limit.yaml'
+    X-RateLimit-Remaining:
+      $ref: './components/headers/X-RateLimit-Remaining.yaml'
+    X-RateLimit-Reset:
+      $ref: './components/headers/X-RateLimit-Reset.yaml'
+
+  schemas:
+    Error:
+      $ref: './components/schemas/Error.yaml'
+    ErrorDetail:
+      $ref: './components/schemas/ErrorDetail.yaml'
+    Pagination:
+      $ref: './components/schemas/Pagination.yaml'

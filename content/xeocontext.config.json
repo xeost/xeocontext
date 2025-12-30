@@ -1,0 +1,87 @@
+{
+    "projectName": "XeoDocs",
+    "projectDomain": "xeodocs.com",
+    "navigation": [
+        {
+            "title": "System Architecture",
+            "items": [
+                {
+                    "title": "System Overview",
+                    "href": "/global/architecture/system-overview"
+                },
+                {
+                    "title": "Architecture & Components",
+                    "href": "/global/architecture/architecture"
+                },
+                {
+                    "title": "Database Schema",
+                    "href": "/global/architecture/database"
+                },
+                {
+                    "title": "Workflows",
+                    "href": "/global/architecture/workflows"
+                },
+                {
+                    "title": "Infrastructure & Security",
+                    "href": "/global/architecture/infrastructure"
+                },
+                {
+                    "title": "CLI Reference",
+                    "href": "/global/architecture/cli-reference"
+                }
+            ]
+        },
+        {
+            "title": "Domains",
+            "items": [
+                {
+                    "title": "Projects",
+                    "href": "/domains/projects/readme",
+                    "items": [
+                        {
+                            "title": "Architecture",
+                            "href": "/domains/projects/architecture"
+                        },
+                        {
+                            "title": "Workflows",
+                            "href": "/domains/projects/workflows"
+                        },
+                        {
+                            "title": "Database Schema",
+                            "href": "/domains/projects/database"
+                        }
+                    ]
+                },
+                {
+                    "title": "Identity",
+                    "href": "/domains/identity/readme",
+                    "items": [
+                        {
+                            "title": "Architecture & Security",
+                            "href": "/domains/identity/architecture"
+                        },
+                        {
+                            "title": "Database Schema",
+                            "href": "/domains/identity/database"
+                        }
+                    ]
+                },
+                {
+                    "title": "Configuration",
+                    "href": "/domains/configuration/readme",
+                    "items": [
+                        {
+                            "title": "Database Schema",
+                            "href": "/domains/configuration/database"
+                        }
+                    ]
+                },
+                {
+                    "title": "Common",
+                    "href": "/domains/common/readme"
+                }
+            ]
+        }
+    ],
+    "openapi": "/global/gateway/openapi.yaml"
+}

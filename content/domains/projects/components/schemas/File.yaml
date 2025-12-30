@@ -1,0 +1,42 @@
+type: object
+required:
+  - id
+  - projectId
+  - languageId
+  - path
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+    readOnly: true
+  projectId:
+    type: string
+    format: uuid
+    readOnly: true
+  languageId:
+    type: string
+    format: uuid
+    readOnly: true
+  path:
+    type: string
+    maxLength: 1000
+  checksumOriginal:
+    type: string
+    maxLength: 64
+    readOnly: true
+  checksumTranslated:
+    type: string
+    maxLength: 64
+    readOnly: true
+  status:
+    $ref: './FileStatus.yaml'
+    default: pending
+  lastSyncedAt:
+    type: string
+    format: date-time
+    readOnly: true
+  updatedAt:
+    type: string
+    format: date-time
+    readOnly: true

@@ -1,0 +1,17 @@
+type: object
+required:
+  - userId
+  - key
+  - value
+properties:
+  userId:
+    type: string
+    format: uuid
+    readOnly: true
+  key:
+    type: string
+    minLength: 1
+    maxLength: 100
+  value:
+    type: string
+    maxLength: 1000

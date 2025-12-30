@@ -1,0 +1,41 @@
+type: object
+required:
+  - id
+  - projectId
+  - code
+  - name
+properties:
+  id:
+    type: string
+    format: uuid
+    readOnly: true
+  projectId:
+    type: string
+    format: uuid
+    readOnly: true
+  code:
+    type: string
+    example: es
+    minLength: 2
+    maxLength: 10
+    readOnly: true
+  name:
+    type: string
+    example: Spanish
+    minLength: 2
+    maxLength: 50
+  domain:
+    type: string
+    example: es.xeodocs.com
+    format: hostname
+  isActive:
+    type: boolean
+    default: true
+  createdAt:
+    type: string
+    format: date-time
+    readOnly: true
+  updatedAt:
+    type: string
+    format: date-time
+    readOnly: true

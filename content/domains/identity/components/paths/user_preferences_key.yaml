@@ -1,0 +1,91 @@
+get:
+  tags:
+    - UserPreferences
+  summary: Get user preference
+  operationId: getUserPreference
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: key
+      schema:
+        type: string
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: Preference details
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/UserPreference.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Preference not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+delete:
+  tags:
+    - UserPreferences
+  summary: Delete user preference
+  operationId: deleteUserPreference
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: key
+      schema:
+        type: string
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '204':
+      description: Preference deleted
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Preference not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

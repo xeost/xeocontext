@@ -1,0 +1,52 @@
+post:
+  tags:
+    - Workflow
+  summary: Submit translated files (CLI)
+  operationId: submitProjectLanguageFiles
+  description: Marks files as translated after CLI submission.
+  parameters:
+    - in: path
+      name: projectId
+      schema:
+        type: string
+        format: uuid
+      required: true
+    - in: path
+      name: languageId
+      schema:
+        type: string
+        format: uuid
+      required: true
+  security:
+    - apiKeyAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/SubmitRequest.yaml'
+  responses:
+    '200':
+      description: Submission accepted, file statuses updated.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/SubmitResponse.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

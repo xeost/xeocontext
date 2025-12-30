@@ -1,0 +1,135 @@
+get:
+  tags:
+    - Configurations
+  summary: Get configuration
+  operationId: getConfiguration
+  parameters:
+    - in: path
+      name: key
+      schema:
+        type: string
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '200':
+      description: Configuration details
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/Configuration.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Configuration not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+patch:
+  tags:
+    - Configurations
+  summary: Update configuration
+  operationId: updateConfiguration
+  parameters:
+    - in: path
+      name: key
+      schema:
+        type: string
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/Configuration.yaml'
+  responses:
+    '200':
+      description: Configuration updated
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '../schemas/Configuration.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Configuration not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+delete:
+  tags:
+    - Configurations
+  summary: Delete configuration
+  operationId: deleteConfiguration
+  parameters:
+    - in: path
+      name: key
+      schema:
+        type: string
+      required: true
+  security:
+    - cookieAuth: []
+    - apiKeyAuth: []
+  responses:
+    '204':
+      description: Configuration deleted
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'
+    '404':
+      description: Configuration not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../common/components/schemas/Error.yaml'

@@ -1,0 +1,11 @@
+type: object
+required:
+  - data
+properties:
+  data:
+    type: object
+    properties:
+      message:
+        type: string
+      user:
+        $ref: './UserDetail.yaml'

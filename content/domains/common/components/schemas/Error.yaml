@@ -1,0 +1,9 @@
+type: object
+properties:
+  message:
+    type: string
+    example: Invalid request parameters
+  details:
+    type: array
+    items:
+      $ref: './ErrorDetail.yaml'

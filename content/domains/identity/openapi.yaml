@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+  title: Identity Domain API
+  version: 1.0.0
+  description: Authentication and User Management
+
+paths:
+  /auth/login:
+    $ref: './components/paths/auth_login.yaml'
+  /auth/logout:
+    $ref: './components/paths/auth_logout.yaml'
+  /users:
+    $ref: './components/paths/users.yaml'
+  /users/me:
+    $ref: './components/paths/users_me.yaml'
+  /users/{userId}:
+    $ref: './components/paths/users_id.yaml'
+  /users/{userId}/preferences:
+    $ref: './components/paths/user_preferences.yaml'
+  /users/{userId}/preferences/{key}:
+    $ref: './components/paths/user_preferences_key.yaml'
+
+components:
+  schemas:
+    User:
+      $ref: './components/schemas/User.yaml'
+    UserDetail:
+      $ref: './components/schemas/UserDetail.yaml'
+    UserPreference:
+      $ref: './components/schemas/UserPreference.yaml'
+    LoginRequest:
+      $ref: './components/schemas/LoginRequest.yaml'
+    LoginResponse:
+      $ref: './components/schemas/LoginResponse.yaml'
